@@ -23,11 +23,33 @@ export interface WeatherData {
 }
 
 export interface WeatherFeatures {
-    temperature: number;
-    rainProbability: number;
-    humidity: number;
-    windSpeed: number;
-    daylightHours: number;
+    // Primary signals (all used by the scoring engine)
+    temperature: number;          // °C, current
+    rainProbability: number;      // 0–100, max over forecast window
+    humidity: number;             // 0–100 %
+    windSpeed: number;            // km/h, current
+    daylightHours: number;        // computed from sunrise → sunset
+    daylightMinutes: number;      // precise version for scoring
+
+    // Derived signals
+    peakRainProbability: number;  // highest hourly precipitation probability
+    avgHourlyTemp: number;        // mean temperature over next 12 h
+    conditionCategory: ConditionCategory; // grouped weather state
+}
+
+/** Broad grouping of WMO weather codes into 5 named states */
+export type ConditionCategory =
+    | "clear"
+    | "cloudy"
+    | "precipitation"
+    | "storm"
+    | "snow";
+
+/** Provenance / debug info attached to every extraction */
+export interface ExtractionMeta {
+    extractedAt: string;   // ISO timestamp
+    sourceCity: string;
+    hoursAnalysed: number;
 }
 
 export interface GeoLocation {

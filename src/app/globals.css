@@ -717,6 +717,196 @@ body {
   text-align: right;
 }
 
+/* ── Productivity Panel ─────────────────────────────── */
+.productivity-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--glass-shadow);
+  padding: var(--space-lg) var(--space-xl);
+  animation: cardIn 0.8s 0.12s cubic-bezier(0.16, 1, 0.3, 1) both;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.prod-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.prod-signal-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.prod-icon {
+  font-size: 2.2rem;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+  flex-shrink: 0;
+}
+
+.prod-signal-label {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.prod-tagline {
+  font-size: 0.78rem;
+  opacity: 0.55;
+  margin-top: 2px;
+}
+
+.prod-reason {
+  font-size: 0.88rem;
+  opacity: 0.8;
+  line-height: 1.55;
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-md);
+  border-left: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Score gauges */
+.prod-scores {
+  display: flex;
+  gap: var(--space-lg);
+  align-items: flex-start;
+}
+
+.prod-divider {
+  width: 1px;
+  align-self: stretch;
+  background: rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+}
+
+.score-gauge {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.gauge-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.gauge-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+.gauge-pct {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.gauge-pct-sign {
+  font-size: 1rem;
+  font-weight: 400;
+  opacity: 0.6;
+}
+
+.gauge-track {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.gauge-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  min-width: 2px;
+}
+
+.gauge-desc {
+  font-size: 0.68rem;
+  opacity: 0.45;
+  font-style: italic;
+}
+
+/* Breakdown */
+.prod-breakdown {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: var(--space-sm);
+}
+
+.prod-breakdown-toggle {
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.45;
+  cursor: pointer;
+  user-select: none;
+  transition: opacity var(--transition-fast);
+  list-style: none;
+}
+
+.prod-breakdown-toggle::-webkit-details-marker {
+  display: none;
+}
+
+.prod-breakdown-toggle:hover {
+  opacity: 0.75;
+}
+
+.prod-breakdown-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: var(--space-sm);
+}
+
+.breakdown-row {
+  display: grid;
+  grid-template-columns: 120px 1fr 36px;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.breakdown-label {
+  font-size: 0.68rem;
+  opacity: 0.5;
+  text-align: right;
+}
+
+.breakdown-bar-track {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.breakdown-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  min-width: 2px;
+}
+
+.breakdown-val {
+  font-size: 0.65rem;
+  opacity: 0.5;
+  font-family: "SF Mono", "Fira Code", monospace;
+  text-align: right;
+}
+
 /* ── Responsive ─────────────────────────────────────── */
 @media (max-width: 600px) {
   .card-main {
@@ -741,5 +931,18 @@ body {
   .feature-panel-header {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .prod-scores {
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .prod-divider {
+    display: none;
+  }
+
+  .breakdown-row {
+    grid-template-columns: 100px 1fr 32px;
   }
 }

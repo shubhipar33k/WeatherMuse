@@ -946,3 +946,159 @@ body {
     grid-template-columns: 100px 1fr 32px;
   }
 }
+
+/* ── Recommendation Panel ───────────────────────────── */
+.recommendation-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--glass-shadow);
+  padding: var(--space-lg) var(--space-xl);
+  animation: cardIn 0.8s 0.08s cubic-bezier(0.16, 1, 0.3, 1) both;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.rec-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.rec-primary-block {
+  font-size: 0.85rem;
+  opacity: 0.75;
+  line-height: 1.5;
+}
+
+/* Task grid */
+.rec-task-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--space-sm);
+}
+
+/* Task card */
+.task-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: var(--space-md);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.04);
+  transition: background var(--transition-fast), transform var(--transition-fast);
+  position: relative;
+  cursor: default;
+}
+
+.task-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
+}
+
+.task-card--optional {
+  border-style: dashed;
+}
+
+.task-priority-badge {
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border: 1px solid;
+  border-radius: var(--radius-full);
+}
+
+.task-card-top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.task-emoji {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.3));
+}
+
+.task-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.task-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.task-time-hint {
+  font-size: 0.65rem;
+  font-family: "SF Mono", "Fira Code", monospace;
+  margin-top: 2px;
+  opacity: 0.85;
+}
+
+/* Type pill */
+.task-type-pill {
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+
+.task-type-pill--indoor {
+  background: rgba(139, 122, 255, 0.2);
+  color: #b8aefe;
+}
+
+.task-type-pill--outdoor {
+  background: rgba(52, 211, 153, 0.2);
+  color: #6ee7b7;
+}
+
+.task-type-pill--flexible {
+  background: rgba(251, 191, 36, 0.15);
+  color: #fcd34d;
+}
+
+.task-description {
+  font-size: 0.72rem;
+  opacity: 0.5;
+  line-height: 1.45;
+}
+
+/* Secondary note */
+.rec-secondary-note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-xs);
+  font-size: 0.75rem;
+  opacity: 0.5;
+  line-height: 1.5;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: var(--space-sm);
+}
+
+.rec-note-icon {
+  flex-shrink: 0;
+}
+
+/* ── Recommendation Responsive ───────────────────────── */
+@media (max-width: 600px) {
+  .rec-task-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

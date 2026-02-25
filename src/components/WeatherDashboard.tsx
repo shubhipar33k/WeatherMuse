@@ -6,10 +6,12 @@ import { fetchWeather, getDeviceLocation } from "@/lib/weather";
 import { getTemperatureGradient } from "@/lib/gradient";
 import { extractWeatherFeatures, ExtractionResult } from "@/lib/featureExtractor";
 import { scoreProductivity, ProductivityScore } from "@/lib/productivityEngine";
+import { recommendTasks, RecommendationResult } from "@/lib/recommendationEngine";
 import WeatherCard from "./WeatherCard";
 import HourlyForecast from "./HourlyForecast";
 import FeaturePanel from "./FeaturePanel";
 import ProductivityPanel from "./ProductivityPanel";
+import RecommendationPanel from "./RecommendationPanel";
 
 type LoadState = "locating" | "loading" | "ready" | "error";
 
@@ -17,6 +19,7 @@ export default function WeatherDashboard() {
     const [weather, setWeather] = useState<WeatherData | null>(null);
     const [extraction, setExtraction] = useState<ExtractionResult | null>(null);
     const [productivity, setProductivity] = useState<ProductivityScore | null>(null);
+    const [recommendations, setRecommendations] = useState<RecommendationResult | null>(null);
     const [loadState, setLoadState] = useState<LoadState>("locating");
     const [error, setError] = useState<string>("");
 
@@ -35,6 +38,9 @@ export default function WeatherDashboard() {
                 // Day 3: rule-based productivity scoring
                 const prodScore = scoreProductivity(result.features);
                 setProductivity(prodScore);
+                // Day 4: task category recommendations
+                const recs = recommendTasks(prodScore);
+                setRecommendations(recs);
                 setLoadState("ready");
             } catch (err) {
                 setError(err instanceof Error ? err.message : "Failed to load weather data.");
@@ -76,11 +82,16 @@ export default function WeatherDashboard() {
                 {loadState === "error" && (
                     <ErrorState message={error} />
                 )}
-                {loadState === "ready" && weather && gradientStyle && extraction && productivity && (
+                {loadState === "ready" && weather && gradientStyle && extraction && productivity && recommendations && (
                     <>
                         <WeatherCard data={weather} />
                         <HourlyForecast
                             forecast={weather.hourlyForecast}
+                            accentColor={gradientStyle.accentColor}
+                        />
+                        {/* Day 4: Task category suggestions */}
+                        <RecommendationPanel
+                            result={recommendations}
                             accentColor={gradientStyle.accentColor}
                         />
                         {/* Day 3: Productivity signal panel */}

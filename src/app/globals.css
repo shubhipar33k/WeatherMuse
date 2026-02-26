@@ -1102,3 +1102,221 @@ body {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* ── Schedule Panel ─────────────────────────────────── */
+.schedule-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--glass-shadow);
+  padding: var(--space-lg) var(--space-xl);
+  animation: cardIn 0.8s 0.05s cubic-bezier(0.16, 1, 0.3, 1) both;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+/* Header */
+.schedule-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.schedule-day-label {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-top: 2px;
+}
+
+.schedule-summary-pills {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.schedule-pill {
+  font-size: 0.68rem;
+  font-weight: 500;
+  padding: 3px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-full);
+  opacity: 0.7;
+}
+
+/* Progress bar */
+.schedule-progress-track {
+  display: flex;
+  height: 6px;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  gap: 2px;
+}
+
+.schedule-progress-segment {
+  border-radius: var(--radius-full);
+  min-width: 2px;
+  transition: opacity var(--transition-fast);
+}
+
+.schedule-progress-segment:hover {
+  opacity: 1 !important;
+}
+
+/* Legend */
+.schedule-progress-legend {
+  display: flex;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.45;
+  font-weight: 600;
+}
+
+.legend-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Timeline */
+.schedule-timeline {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Each row */
+.time-block-row {
+  display: grid;
+  grid-template-columns: 52px 20px 1fr;
+  align-items: stretch;
+  min-height: 52px;
+}
+
+.time-block-row--break {
+  min-height: 36px;
+  opacity: 0.65;
+}
+
+/* Time column */
+.time-block-time-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.time-block-start,
+.time-block-end {
+  font-size: 0.65rem;
+  font-family: "SF Mono", "Fira Code", monospace;
+  opacity: 0.5;
+  line-height: 1;
+}
+
+/* Connector */
+.time-block-connector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 6px;
+}
+
+.time-block-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.time-block-line {
+  width: 2px;
+  flex: 1;
+  margin-top: 3px;
+  border-radius: var(--radius-full);
+}
+
+/* Block content */
+.time-block-content {
+  margin-left: var(--space-sm);
+  margin-bottom: 6px;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.time-block-content:hover {
+  transform: translateX(2px);
+  filter: brightness(1.1);
+}
+
+.time-block-content-top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.time-block-emoji {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.time-block-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.time-block-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.time-block-primary-tag {
+  font-size: 0.7rem;
+  opacity: 0.8;
+}
+
+.time-block-desc {
+  font-size: 0.68rem;
+  opacity: 0.5;
+}
+
+.time-block-dur {
+  font-size: 0.65rem;
+  font-family: "SF Mono", "Fira Code", monospace;
+  opacity: 0.45;
+  flex-shrink: 0;
+}
+
+/* Schedule responsive */
+@media (max-width: 600px) {
+  .schedule-header {
+    flex-direction: column;
+  }
+
+  .time-block-row {
+    grid-template-columns: 44px 16px 1fr;
+  }
+}

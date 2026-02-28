@@ -738,6 +738,41 @@ body {
   gap: var(--space-sm);
 }
 
+/* Day 6: header right side with section title + confidence badge */
+.prod-header-right {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.confidence-badge {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border: 1px solid;
+  border-radius: var(--radius-full);
+  opacity: 0.85;
+  transition: opacity var(--transition-fast);
+  cursor: default;
+}
+
+.confidence-badge:hover {
+  opacity: 1;
+}
+
+/* Day 6: uncertainty annotation under gauge */
+.gauge-uncertainty {
+  font-size: 0.6rem;
+  opacity: 0.4;
+  font-family: "SF Mono", "Fira Code", monospace;
+  letter-spacing: 0.04em;
+  margin-top: 1px;
+}
+
 .prod-signal-row {
   display: flex;
   align-items: center;

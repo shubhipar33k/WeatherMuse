@@ -1,6 +1,7 @@
 "use client";
 
 import { ProductivityScore, ProductivitySignal } from "@/lib/productivityEngine";
+import { ConfidenceBand } from "@/lib/scoringModel";
 
 interface ProductivityPanelProps {
     score: ProductivityScore;
@@ -15,10 +16,19 @@ const SIGNAL_CONFIG: Record<ProductivitySignal, { label: string; icon: string; t
     "mixed": { label: "Mixed Conditions", icon: "⚖️", tagline: "Interleave indoor and outdoor tasks" },
 };
 
+const CONFIDENCE_COLORS: Record<ConfidenceBand, { color: string; label: string }> = {
+    high: { color: "rgba(110,231,183,0.85)", label: "High confidence" },
+    medium: { color: "rgba(251,191,36,0.85)", label: "Medium confidence" },
+    low: { color: "rgba(248,113,113,0.85)", label: "Low confidence — check forecast" },
+};
+
 export default function ProductivityPanel({ score, accentColor }: ProductivityPanelProps) {
     const cfg = SIGNAL_CONFIG[score.signal];
+    const confCfg = CONFIDENCE_COLORS[score.confidenceBand];
     const focusPct = Math.round(score.focusScore * 100);
     const outdoorPct = Math.round(score.outdoorViability * 100);
+    const focusUncPct = Math.round(score.focusUncertainty * 100);
+    const outUncPct = Math.round(score.outdoorUncertainty * 100);
 
     return (
         <div className="productivity-panel">
@@ -31,7 +41,17 @@ export default function ProductivityPanel({ score, accentColor }: ProductivityPa
                         <p className="prod-tagline">{cfg.tagline}</p>
                     </div>
                 </div>
-                <h3 className="section-title">Productivity Signal</h3>
+                <div className="prod-header-right">
+                    <h3 className="section-title">Productivity Signal</h3>
+                    {/* Day 6: Confidence badge */}
+                    <span
+                        className="confidence-badge"
+                        style={{ color: confCfg.color, borderColor: confCfg.color }}
+                        title={`Model confidence: ${Math.round(score.confidence * 100)}%`}
+                    >
+                        ◉ {confCfg.label}
+                    </span>
+                </div>
             </div>
 
             {/* Reason */}
@@ -42,6 +62,7 @@ export default function ProductivityPanel({ score, accentColor }: ProductivityPa
                 <ScoreGauge
                     label="Focus Score"
                     value={focusPct}
+                    uncertainty={focusUncPct}
                     accentColor={accentColor}
                     description="Indoor cognitive potential"
                 />
@@ -49,6 +70,7 @@ export default function ProductivityPanel({ score, accentColor }: ProductivityPa
                 <ScoreGauge
                     label="Outdoor Viability"
                     value={outdoorPct}
+                    uncertainty={outUncPct}
                     accentColor={accentColor}
                     description="Conditions for going outside"
                 />
@@ -72,9 +94,9 @@ export default function ProductivityPanel({ score, accentColor }: ProductivityPa
 // ── Sub-components ────────────────────────────────────────────────────────────
 
 function ScoreGauge({
-    label, value, accentColor, description,
+    label, value, uncertainty, accentColor, description,
 }: {
-    label: string; value: number; accentColor: string; description: string;
+    label: string; value: number; uncertainty?: number; accentColor: string; description: string;
 }) {
     return (
         <div className="score-gauge">
@@ -92,6 +114,11 @@ function ScoreGauge({
                     aria-valuemax={100}
                 />
             </div>
+            {uncertainty !== undefined && uncertainty > 0 && (
+                <span className="gauge-uncertainty">
+                    ±{uncertainty}% uncertainty
+                </span>
+            )}
             <span className="gauge-desc">{description}</span>
         </div>
     );

@@ -1,14 +1,16 @@
 /**
- * ProductivityEngine — Day 3
+ * ProductivityEngine — Days 3 + 6
  *
- * Rule-based scoring system that converts WeatherFeatures into structured
- * productivity signals. Deterministic and transparent — no ML yet.
+ * Rule-based scoring system (Day 3) upgraded with a weighted scoring model
+ * and confidence bands (Day 6). The weighted model replaces the ad-hoc linear
+ * formula; confidence is derived from signal ambiguity across all features.
  *
- * Designed so every rule is readable and the weights are explicit constants,
- * making it trivially replaceable by the weighted model on Day 6.
+ * External consumers (RecommendationEngine, TimeBlockEngine) depend only on
+ * ProductivityScore — adding fields here is fully backward-compatible.
  */
 
 import { WeatherFeatures } from "@/types/weather";
+import { computeWeightedScores, ConfidenceBand } from "@/lib/scoringModel";
 
 // ── Output types ──────────────────────────────────────────────────────────────
 
@@ -23,6 +25,15 @@ export interface ProductivityScore {
     reason: string;
     /** Sub-scores for transparency / future UI */
     breakdown: ScoreBreakdown;
+    // ── Day 6 additions ────────────────────────────────
+    /** 0–1 overall model confidence in the current scores */
+    confidence: number;
+    /** high / medium / low confidence band label */
+    confidenceBand: ConfidenceBand;
+    /** ±δ uncertainty radius — focusScore lies in [focusScore±focusUncertainty] */
+    focusUncertainty: number;
+    /** ±δ uncertainty radius for outdoor viability */
+    outdoorUncertainty: number;
 }
 
 export type ProductivitySignal =
@@ -123,40 +134,28 @@ export function scoreProductivity(features: WeatherFeatures): ProductivityScore 
         temperaturePenalty: r2(temperaturePenalty),
     };
 
-    // ── Focus score ─────────────────────────────────────────────────────────────
-    // Rain and long daylight are the dominant signals for indoor focus.
-    // High rain → stay in, good light → productive mood.
-    // Humidity and extreme temps have minor suppression effects.
-    const focusScore = clamp01(
-        0.5                                  // base
-        + rainPenalty * 0.35                 // rain pushes indoors (good for focus)
-        + daylightBonus * 0.25               // more daylight → better mood
-        - humidityPenalty * 0.15             // muggy = sluggish
-        - temperaturePenalty * 0.10          // extreme temps = distraction
-    );
+    // ── Day 6: Weighted model scores + confidence ─────────────────────────────
+    const weighted = computeWeightedScores(features);
 
-    // ── Outdoor viability ────────────────────────────────────────────────────────
-    // Penalties stack inversely to focusScore — bad weather is good for focus,
-    // bad for going outside.
-    const outdoorViability = clamp01(
-        0.8                                  // optimistic base
-        - rainPenalty * 0.55                 // rain is the dominant blocker
-        - windPenalty * 0.20                 // wind is uncomfortable
-        - temperaturePenalty * 0.20          // extreme temps discourage going out
-        + daylightBonus * 0.10               // daylight gives a small boost
-        - humidityPenalty * 0.05             // mild penalty
-    );
+    // Blend: weighted model drives the primary scores from Day 6 onward
+    const focusScore = weighted.focusScore;
+    const outdoorViability = weighted.outdoorViability;
 
     // ── Signal label ──────────────────────────────────────────────────────────
     const signal = deriveSignal(focusScore, outdoorViability);
     const reason = deriveReason(signal, features, rainPenalty, windPenalty);
 
     return {
-        focusScore: r2(focusScore),
-        outdoorViability: r2(outdoorViability),
+        focusScore,
+        outdoorViability,
         signal,
         reason,
         breakdown,
+        // Day 6 fields
+        confidence: weighted.confidence,
+        confidenceBand: weighted.confidenceBand,
+        focusUncertainty: weighted.focusUncertainty,
+        outdoorUncertainty: weighted.outdoorUncertainty,
     };
 }
 

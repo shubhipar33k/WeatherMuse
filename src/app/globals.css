@@ -1355,3 +1355,175 @@ body {
     grid-template-columns: 44px 16px 1fr;
   }
 }
+
+/* ── Baseline Panel ─────────────────────────────────── */
+.baseline-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--glass-shadow);
+  padding: var(--space-lg) var(--space-xl);
+  animation: cardIn 0.8s 0.04s cubic-bezier(0.16, 1, 0.3, 1) both;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.baseline-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.baseline-window-badge {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-full);
+  opacity: 0.6;
+}
+
+.baseline-summary {
+  font-size: 0.85rem;
+  opacity: 0.75;
+  line-height: 1.55;
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-md);
+  border-left: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Delta section */
+.baseline-deltas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.baseline-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.delta-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.delta-row-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.delta-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+.delta-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.delta-change {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.delta-bar-row {
+  display: grid;
+  grid-template-columns: 52px 1fr 56px;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.delta-avg-label,
+.delta-today-label {
+  font-size: 0.62rem;
+  font-family: "SF Mono", "Fira Code", monospace;
+  opacity: 0.55;
+  white-space: nowrap;
+}
+
+.delta-today-label {
+  text-align: right;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.delta-bar-track {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: var(--radius-full);
+  position: relative;
+  overflow: visible;
+}
+
+.delta-bar-baseline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.delta-bar-marker {
+  position: absolute;
+  top: 50%;
+  width: 3px;
+  height: 14px;
+  border-radius: var(--radius-full);
+  transform: translate(-50%, -50%);
+  transition: left 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 2;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+}
+
+/* Progress for new users */
+.baseline-progress-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.baseline-progress-track {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.baseline-progress-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  min-width: 4px;
+}
+
+.baseline-progress-label {
+  font-size: 0.68rem;
+  opacity: 0.45;
+  text-align: center;
+}
+
+/* Baseline responsive */
+@media (max-width: 600px) {
+  .delta-bar-row {
+    grid-template-columns: 44px 1fr 48px;
+  }
+}

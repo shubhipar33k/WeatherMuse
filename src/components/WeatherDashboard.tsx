@@ -10,6 +10,7 @@ import { recommendTasks, RecommendationResult } from "@/lib/recommendationEngine
 import { buildDailySchedule, DailySchedule } from "@/lib/timeBlockEngine";
 import { saveSnapshot, loadHistory } from "@/lib/historyStore";
 import { computeBaseline, BaselineResult } from "@/lib/baselineEngine";
+import { detectAlerts, AlertResult } from "@/lib/alertEngine";
 import WeatherCard from "./WeatherCard";
 import HourlyForecast from "./HourlyForecast";
 import FeaturePanel from "./FeaturePanel";
@@ -17,6 +18,7 @@ import ProductivityPanel from "./ProductivityPanel";
 import RecommendationPanel from "./RecommendationPanel";
 import SchedulePanel from "./SchedulePanel";
 import BaselinePanel from "./BaselinePanel";
+import AlertPanel from "./AlertPanel";
 
 type LoadState = "locating" | "loading" | "ready" | "error";
 
@@ -27,6 +29,7 @@ export default function WeatherDashboard() {
     const [recommendations, setRecommendations] = useState<RecommendationResult | null>(null);
     const [schedule, setSchedule] = useState<DailySchedule | null>(null);
     const [baseline, setBaseline] = useState<BaselineResult | null>(null);
+    const [alertResult, setAlertResult] = useState<AlertResult | null>(null);
     const [loadState, setLoadState] = useState<LoadState>("locating");
     const [error, setError] = useState<string>("");
 
@@ -57,6 +60,9 @@ export default function WeatherDashboard() {
                 setBaseline(baselineResult);
                 // Save today's snapshot after computing baseline (so today doesn't pollute its own baseline)
                 saveSnapshot(result.features, prodScore);
+                // Day 8: smart alerts from hourly forecast
+                const alerts = detectAlerts(data.hourlyForecast);
+                setAlertResult(alerts);
                 setLoadState("ready");
             } catch (err) {
                 setError(err instanceof Error ? err.message : "Failed to load weather data.");
@@ -98,11 +104,16 @@ export default function WeatherDashboard() {
                 {loadState === "error" && (
                     <ErrorState message={error} />
                 )}
-                {loadState === "ready" && weather && gradientStyle && extraction && productivity && recommendations && schedule && baseline && (
+                {loadState === "ready" && weather && gradientStyle && extraction && productivity && recommendations && schedule && baseline && alertResult && (
                     <>
                         <WeatherCard data={weather} />
                         <HourlyForecast
                             forecast={weather.hourlyForecast}
+                            accentColor={gradientStyle.accentColor}
+                        />
+                        {/* Day 8: Smart weather alerts */}
+                        <AlertPanel
+                            alertResult={alertResult}
                             accentColor={gradientStyle.accentColor}
                         />
                         {/* Day 7: Personal baseline comparison */}

@@ -19,6 +19,8 @@ import RecommendationPanel from "./RecommendationPanel";
 import SchedulePanel from "./SchedulePanel";
 import BaselinePanel from "./BaselinePanel";
 import AlertPanel from "./AlertPanel";
+import StickyAlertBanner from "./StickyAlertBanner";
+import LoadingSkeleton from "./LoadingSkeleton";
 
 type LoadState = "locating" | "loading" | "ready" | "error";
 
@@ -84,6 +86,10 @@ export default function WeatherDashboard() {
             <div className="ambient-orb orb-1" style={gradientStyle ? { background: `${gradientStyle.accentColor}18` } : {}} />
             <div className="ambient-orb orb-2" style={gradientStyle ? { background: `${gradientStyle.accentColor}10` } : {}} />
 
+            {/* Day 9: Sticky alert banner (appears on scroll when there are alerts) */}
+            {alertResult && (
+                <StickyAlertBanner alertResult={alertResult} accentColor={gradientStyle?.accentColor ?? "#94a3b8"} />
+            )}
             {/* Header */}
             <header className="dashboard-header">
                 <div className="logo-area">
@@ -95,11 +101,8 @@ export default function WeatherDashboard() {
 
             {/* Main content */}
             <main className="dashboard-main">
-                {loadState === "locating" && (
-                    <LoadingState message="Locating you..." icon="📍" />
-                )}
-                {loadState === "loading" && (
-                    <LoadingState message="Fetching weather data..." icon="🌤️" />
+                {(loadState === "locating" || loadState === "loading") && (
+                    <LoadingSkeleton />
                 )}
                 {loadState === "error" && (
                     <ErrorState message={error} />
